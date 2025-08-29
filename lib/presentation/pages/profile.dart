@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:nutralyse_jd/service/firebase/authentication_service.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final AuthenticationService _authService = AuthenticationService();
+
     return Scaffold(
       backgroundColor: Colors.grey[200], // background abu2 di luar card
       body: SafeArea(
@@ -77,8 +80,8 @@ class Profile extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          onPressed: () {
-                            // TODO: add logout logic
+                          onPressed: () async {
+                            await _authService.logout(context);
                           },
                           child: const Text(
                             "Keluar",

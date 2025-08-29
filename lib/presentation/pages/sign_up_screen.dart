@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:nutralyse_jd/service/firebase/auth_exception_handler.dart';
 import 'package:nutralyse_jd/service/firebase/authentication_service.dart';
 
-
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
 
@@ -17,12 +16,14 @@ class _SignupState extends State<Signup> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-  TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _tanggalLahirController = TextEditingController();
 
   final AuthenticationService _firebaseAuthService = AuthenticationService();
+
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+  String? _selectedGender;
 
   @override
   void dispose() {
@@ -30,7 +31,24 @@ class _SignupState extends State<Signup> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _tanggalLahirController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        _tanggalLahirController.text =
+        "${pickedDate.day}-${pickedDate.month}-${pickedDate.year}";
+      });
+    }
   }
 
   Future<void> handleSignUp() async {
@@ -38,9 +56,16 @@ class _SignupState extends State<Signup> {
     String email = _emailController.text.trim();
     String password = _passwordController.text.trim();
     String confirmPassword = _confirmPasswordController.text.trim();
+    String tanggalLahir = _tanggalLahirController.text.trim();
+    String jenisKelamin = _selectedGender ?? '';
 
     if (password != confirmPassword) {
       Fluttertoast.showToast(msg: "Password tidak sama");
+      return;
+    }
+
+    if (jenisKelamin.isEmpty) {
+      Fluttertoast.showToast(msg: "Pilih jenis kelamin");
       return;
     }
 
@@ -48,6 +73,8 @@ class _SignupState extends State<Signup> {
       fullName: fullName,
       email: email,
       password: password,
+      tanggalLahir: tanggalLahir,
+      jenisKelamin: jenisKelamin,
     );
 
     if (status == AuthResultStatus.successful) {
@@ -68,8 +95,7 @@ class _SignupState extends State<Signup> {
           context.go('/login');
         });
         return AlertDialog(
-          shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           content: Row(
             children: const [
               Icon(Icons.check_circle, color: Colors.green, size: 40),
@@ -112,7 +138,7 @@ class _SignupState extends State<Signup> {
                 ),
                 const SizedBox(height: 30),
 
-                // Full name
+                // Nama Lengkap
                 TextFormField(
                   controller: _fullNameController,
                   decoration: InputDecoration(
@@ -148,6 +174,91 @@ class _SignupState extends State<Signup> {
                 ),
                 const SizedBox(height: 15),
 
+                // Tanggal Lahir
+                TextFormField(
+                  controller: _tanggalLahirController,
+                  readOnly: true,
+                  onTap: () => _pickDate(context),
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.calendar_today),
+                    hintText: "Tanggal Lahir",
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  validator: (value) =>
+                  value == null || value.isEmpty ? "Masukkan tanggal lahir" : null,
+                ),
+                const SizedBox(height: 15),
+
+                // Jenis Kelamin
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Jenis Kelamin",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade400),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedGender = 'Laki-laki';
+                              });
+                            },
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.male,
+                                  color: _selectedGender == 'Laki-laki'
+                                      ? Colors.blue
+                                      : Colors.grey,
+                                  size: 40,
+                                ),
+                                const SizedBox(height: 5),
+                                const Text('Laki-laki'),
+                              ],
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedGender = 'Perempuan';
+                              });
+                            },
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.female,
+                                  color: _selectedGender == 'Perempuan'
+                                      ? Colors.pink
+                                      : Colors.grey,
+                                  size: 40,
+                                ),
+                                const SizedBox(height: 5),
+                                const Text('Perempuan'),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 15),
+
                 // Password
                 TextFormField(
                   controller: _passwordController,
@@ -156,9 +267,7 @@ class _SignupState extends State<Signup> {
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscurePassword
-                            ? Icons.visibility_off
-                            : Icons.visibility,
+                        _obscurePassword ? Icons.visibility_off : Icons.visibility,
                         color: Colors.grey,
                       ),
                       onPressed: () {
@@ -180,7 +289,7 @@ class _SignupState extends State<Signup> {
                 ),
                 const SizedBox(height: 15),
 
-                // Confirm Password
+                // Konfirmasi Password
                 TextFormField(
                   controller: _confirmPasswordController,
                   obscureText: _obscureConfirmPassword,
@@ -188,9 +297,7 @@ class _SignupState extends State<Signup> {
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscureConfirmPassword
-                            ? Icons.visibility_off
-                            : Icons.visibility,
+                        _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
                         color: Colors.grey,
                       ),
                       onPressed: () {
@@ -217,10 +324,9 @@ class _SignupState extends State<Signup> {
                     return null;
                   },
                 ),
-
                 const SizedBox(height: 25),
 
-                // Daftar button
+                // Tombol Daftar
                 SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -246,8 +352,47 @@ class _SignupState extends State<Signup> {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 25),
+
+                // Divider
+                Row(
+                  children: const [
+                    Expanded(child: Divider(thickness: 1)),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Text("Atau masuk dengan"),
+                    ),
+                    Expanded(child: Divider(thickness: 1)),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // Google & Facebook buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      //onTap: _signInWithGoogle,
+                      child: SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: Image.asset("assets/images/google.png"),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    GestureDetector(
+                      onTap: () {
+                        // TODO: Facebook login
+                      },
+                      child: SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: Image.asset("assets/images/facebook.png"),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 20),
 
                 // Sudah punya akun?
                 Row(

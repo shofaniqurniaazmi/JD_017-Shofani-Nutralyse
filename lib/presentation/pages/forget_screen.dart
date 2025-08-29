@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:nutralyse_jd/presentation/pages/login_screen.dart';
 import 'package:nutralyse_jd/presentation/widget/form_container_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:nutralyse_jd/presentation/pages/confirm_password_screen.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -19,6 +21,26 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     super.dispose();
   }
 
+  Future<void> _sendResetEmail() async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(
+        email: _emailController.text.trim(),
+      );
+
+      // Setelah kirim email → arahkan ke confirm password screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ConfirmPasswordScreen(email: _emailController.text.trim()),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Gagal kirim email reset: $e")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,44 +51,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Illustration
-              Image.asset(
-                "assets/images/forgot.png",
-                height: 220,
-              ),
+              Image.asset("assets/images/forgot.png", height: 220),
               const SizedBox(height: 20),
-
-              // Title
               const Text(
                 "Lupa Kata Sandi",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 5),
               const Text(
                 "ayo kita bantu pulihkan aksesmu.",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black54,
-                ),
-              ),
-              const SizedBox(height: 15),
-
-              // Description
-              const Text(
-                "Kami akan mengirimkan kode verifikasi ke email Anda. "
-                    "Gunakan kode tersebut untuk melanjutkan proses atur ulang kata sandi.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black87,
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.black54),
               ),
               const SizedBox(height: 25),
-
-              // Email input
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(
@@ -81,21 +77,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
               ),
               const SizedBox(height: 25),
-
-              // Button
               SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFD4D47C), // hijau kekuningan
+                    backgroundColor: const Color(0xFFD4D47C),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  onPressed: () {
-                    // TODO: action kirim email reset password
-                  },
+                  onPressed: _sendResetEmail,
                   child: const Text(
                     "Kirim Email",
                     style: TextStyle(
@@ -113,3 +105,4 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 }
+

@@ -11,28 +11,31 @@ import 'package:nutralyse_jd/presentation/pages/onboard.dart';
 import 'package:nutralyse_jd/presentation/pages/forget_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() async {
+bool isLoggedIn = false;
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // cek login dari shared preferences
+  final prefs = await SharedPreferences.getInstance();
+  isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
   runApp(const MyApp());
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(MyApp(),
-  );
 }
 
-  /// GoRouter config
+/// GoRouter config
 final GoRouter _router = GoRouter(
-  initialLocation: '/',
+  initialLocation: isLoggedIn ? '/home' : '/login',
   routes: [
     GoRoute(
       path: '/login',
-      builder: (BuildContext context, GoRouterState state) {
-        return LoginPage();
-      },
+      builder: (context, state) => const LoginPage(),
     ),
     GoRoute(
       path: '/',
@@ -40,27 +43,19 @@ final GoRouter _router = GoRouter(
     ),
     GoRoute(
       path: '/onboard',
-      builder: (BuildContext context, GoRouterState state) {
-        return Onboard();
-      },
+      builder: (context, state) => Onboard(),
     ),
     GoRoute(
       path: '/get-started',
-      builder: (BuildContext context, GoRouterState state) {
-        return SplashScreen();
-      },
+      builder: (context, state) => SplashScreen(),
     ),
     GoRoute(
       path: '/sign-up',
-      builder: (BuildContext context, GoRouterState state) {
-        return Signup();
-      },
+      builder: (context, state) => Signup(),
     ),
     GoRoute(
       path: '/forget-password',
-      builder: (BuildContext context, GoRouterState state) {
-        return ForgotPasswordScreen();
-      },
+      builder: (context, state) => ForgotPasswordScreen(),
     ),
     ShellRoute(
       builder: (context, state, child) => NavigationMenu(child: child),

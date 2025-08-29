@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nutralyse_jd/service/firebase/authentication_service.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
 
+class _HomePageState extends State<HomePage> {
+  final AuthenticationService _firebaseAuth = AuthenticationService();
+  late Future<Map<String, dynamic>?> _userProfileFuture;
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> rekomendasi = [

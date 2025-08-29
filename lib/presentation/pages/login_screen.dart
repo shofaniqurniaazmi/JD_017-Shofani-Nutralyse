@@ -43,15 +43,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _signInWithGoogle() async {
     try {
       await _firebaseAuthService.loginWithGoogle();
-      String? userId = await SecureStorage().getUserId();
-      bool isCompleteClassification =
-      await _firebaseAuthService.isClassificationCompleted(userId!);
-
-      if (isCompleteClassification) {
-        context.go('/home');
-      } else {
-        context.go('/user-clasification');
-      }
+      context.go('/home');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Gagal login dengan Google: $e')),
@@ -73,15 +65,7 @@ class _LoginPageState extends State<LoginPage> {
 
       if (status == AuthResultStatus.successful) {
         Fluttertoast.showToast(msg: "Login berhasil!");
-        String? userId = await SecureStorage().getUserId();
-        bool isCompleteClassification =
-        await _firebaseAuthService.isClassificationCompleted(userId!);
-
-        if (isCompleteClassification) {
-          context.go('/home');
-        } else {
-          context.go('/user-clasification');
-        }
+        context.go('/home');
       } else {
         final errorMsg = AuthExceptionHandler.generateExceptionMessage(status);
         Fluttertoast.showToast(msg: errorMsg);
@@ -203,7 +187,7 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: Colors.white,
                       ),
                     ),
                   ),
