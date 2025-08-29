@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "473399528772",
+    "project_id": "nutralyse-ae55d",
+    "storage_bucket": "nutralyse-ae55d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:473399528772:android:3e8479fbff295b239e9b11",
+        "android_client_info": {
+          "package_name": "com.example.nutralyse_jd"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFbMrJ4X1kWXCbKEl7kgv_THE24SYAKXc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

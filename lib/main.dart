@@ -9,12 +9,22 @@ import 'package:nutralyse_jd/presentation/pages/login_screen.dart';
 import 'package:nutralyse_jd/presentation/pages/sign_up_screen.dart';
 import 'package:nutralyse_jd/presentation/pages/onboard.dart';
 import 'package:nutralyse_jd/presentation/pages/forget_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp(),
+  );
 }
 
-/// GoRouter config
+  /// GoRouter config
 final GoRouter _router = GoRouter(
   initialLocation: '/',
   routes: [

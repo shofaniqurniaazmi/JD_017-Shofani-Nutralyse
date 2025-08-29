@@ -42,7 +42,6 @@ class AuthenticationService {
     required String fullName,
     required String email,
     required String password,
-    required String confirmPassword,
   }) async {
     try {
       final UserCredential authResult =
@@ -50,7 +49,7 @@ class AuthenticationService {
         email: email,
         password: password,
       );
-      print(authResult.credential == null);
+
       if (authResult.user != null) {
         _saveUserDetails(
           fullName: fullName,
@@ -59,7 +58,7 @@ class AuthenticationService {
         );
         status = AuthResultStatus.successful;
       } else {
-        print('something wrong');
+        status = AuthResultStatus.undefined;
       }
     } catch (e) {
       if (e is FirebaseAuthException) {
@@ -71,6 +70,7 @@ class AuthenticationService {
     }
     return status;
   }
+
 
   // Login with Google
   Future<AuthResultStatus> loginWithGoogle() async {

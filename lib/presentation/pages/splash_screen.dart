@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // Setelah 3 detik pindah ke /home
     Timer(const Duration(seconds: 3), () {
       if (mounted) {
-        context.go('/home'); // GoRouter langsung handle
+        context.go('/login'); // GoRouter langsung handle
       }
     });
   }
