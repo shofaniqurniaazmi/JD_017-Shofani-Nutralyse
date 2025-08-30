@@ -8,7 +8,7 @@ import 'package:nutralyse_jd/presentation/widget/loading_dialog.dart';
 import 'package:nutralyse_jd/service/firebase/storage_service.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:go_router/go_router.dart';
 
 class Camera extends StatefulWidget {
   @override
@@ -120,7 +120,7 @@ class _CameraState extends State<Camera> {
                 IconButton(
                   icon: const Icon(Icons.close, size: 32, color: Colors.black54),
                   onPressed: () {
-                    Navigator.pop(context);
+                    context.go('/home'); // langsung ke HomePage
                   },
                 ),
                 // Tombol capture (besar di tengah)

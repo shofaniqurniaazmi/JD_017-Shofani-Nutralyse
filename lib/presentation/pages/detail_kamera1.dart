@@ -302,20 +302,23 @@ Structure:
               SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
-                  onPressed: handleSave,
+                  onPressed: () {
+                    context.go('/home');
+                  },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFD6D36F),
+                    backgroundColor: const Color(0xFFD6D36F),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 50, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
                   ),
-                  child: Text('Rekomendasi Menu Sehat',
-                      style: TextStyle(
-                          fontSize: 16, color: Colors.white)),
+                  child: const Text(
+                    'Rekomendasi Menu Sehat',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
                 ),
               ),
+
               SizedBox(height: 40),
             ],
           ),

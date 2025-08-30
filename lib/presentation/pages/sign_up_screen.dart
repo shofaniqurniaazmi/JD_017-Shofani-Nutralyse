@@ -78,34 +78,19 @@ class _SignupState extends State<Signup> {
     );
 
     if (status == AuthResultStatus.successful) {
-      Fluttertoast.showToast(msg: "Daftar berhasil!");
-      _showSignUpSuccessDialog();
+      Fluttertoast.showToast(
+        msg: "Daftar berhasil!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+      );
+
+      Future.delayed(const Duration(milliseconds: 500), () {
+        context.go('/login');
+      });
     } else {
       final errorMsg = AuthExceptionHandler.generateExceptionMessage(status);
       Fluttertoast.showToast(msg: errorMsg);
     }
-  }
-
-  void _showSignUpSuccessDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        Future.delayed(const Duration(seconds: 2), () {
-          context.go('/login');
-        });
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          content: Row(
-            children: const [
-              Icon(Icons.check_circle, color: Colors.green, size: 40),
-              SizedBox(width: 10),
-              Text('SignUp berhasil'),
-            ],
-          ),
-        );
-      },
-    );
   }
 
   @override
@@ -122,18 +107,12 @@ class _SignupState extends State<Signup> {
               children: [
                 const Text(
                   "Register",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 const Text(
                   "Buat akun dan mulai perjalanan sehatmu",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black54,
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.black54),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 30),
@@ -352,47 +331,8 @@ class _SignupState extends State<Signup> {
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 25),
-
-                // Divider
-                Row(
-                  children: const [
-                    Expanded(child: Divider(thickness: 1)),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: Text("Atau masuk dengan"),
-                    ),
-                    Expanded(child: Divider(thickness: 1)),
-                  ],
-                ),
-                const SizedBox(height: 20),
-
-                // Google & Facebook buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      //onTap: _signInWithGoogle,
-                      child: SizedBox(
-                        width: 40,
-                        height: 40,
-                        child: Image.asset("assets/images/google.png"),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    GestureDetector(
-                      onTap: () {
-                        // TODO: Facebook login
-                      },
-                      child: SizedBox(
-                        width: 40,
-                        height: 40,
-                        child: Image.asset("assets/images/facebook.png"),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 20),
 
                 // Sudah punya akun?
                 Row(
