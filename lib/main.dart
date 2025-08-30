@@ -29,17 +29,16 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-/// GoRouter config
 final GoRouter _router = GoRouter(
-  initialLocation: isLoggedIn ? '/home' : '/login',
+  initialLocation: '/', // ⬅️ selalu mulai dari SplashScreen
   routes: [
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => const LoginPage(),
-    ),
     GoRoute(
       path: '/',
       builder: (context, state) => const SplashScreen(),
+    ),
+    GoRoute(
+      path: '/login',
+      builder: (context, state) => const LoginPage(),
     ),
     GoRoute(
       path: '/onboard',
@@ -76,6 +75,7 @@ final GoRouter _router = GoRouter(
     ),
   ],
 );
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

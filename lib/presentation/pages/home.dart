@@ -1,36 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:go_router/go_router.dart';
-import 'package:nutralyse_jd/service/firebase/authentication_service.dart';
+import 'package:nutralyse_jd/common/assets/assets.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
-class _HomePageState extends State<HomePage> {
-  final AuthenticationService _firebaseAuth = AuthenticationService();
-  late Future<Map<String, dynamic>?> _userProfileFuture;
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> rekomendasi = [
       {
-        'nama': 'Bakso Ikan Tuna',
-        'gambar': 'assets/images/bakso.png',
-        'persen': '88%',
-        'harga': 15000,
-        'deskripsi':
-        'Bakso ikan tuna yang lembut, sehat, dan bergizi. Cocok disantap dengan nasi hangat atau kuah segar.',
-        'wa': '6281234567890'
-      },
-      {
+       'nama': 'Bakso Ikan Tuna',
+    'gambar': bakso,
+    'persen': '88%',
+
         'nama': 'Sayur Sop',
-        'gambar': 'assets/images/sayur.png',
+        'gambar': bakso,
         'persen': '90%',
-        'harga': 10000,
-        'deskripsi':
-        'Sayur sop segar dengan sayuran pilihan yang menyehatkan. Kaya akan vitamin dan serat.',
-        'wa': '6281234567890'
       },
     ];
 
@@ -42,32 +28,18 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
-              // 🔹 Header (sapaan + avatar)
+              // 🔹 Header
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        "Halo, Liam",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        "Minggu 17 Agustus",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
+                children: const [
+                  Text(
+                    "Halo, Liam",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  const CircleAvatar(
+                  CircleAvatar(
                     radius: 24,
                     backgroundColor: Colors.orange,
                     child: Icon(Icons.face, color: Colors.white),
@@ -79,7 +51,8 @@ class _HomePageState extends State<HomePage> {
 
               // 🔹 Progress Mingguan
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                padding:
+                const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                 decoration: BoxDecoration(
                   color: Colors.yellow[100],
                   borderRadius: BorderRadius.circular(20),
@@ -155,80 +128,95 @@ class _HomePageState extends State<HomePage> {
                 mainAxisSpacing: 12,
                 physics: const NeverScrollableScrollPhysics(),
                 children: const [
-                  NutrientCard(percent: 95, label: "Gula", color: Colors.purple),
-                  NutrientCard(percent: 85, label: "Karbohidrat", color: Colors.green),
+                  NutrientCard(
+                      percent: 95, label: "Gula", color: Colors.purple),
+                  NutrientCard(
+                      percent: 85, label: "Karbohidrat", color: Colors.green),
                   NutrientCard(percent: 80, label: "Lemak", color: Colors.red),
-                  NutrientCard(percent: 75, label: "Protein", color: Colors.amber),
+                  NutrientCard(
+                      percent: 75, label: "Protein", color: Colors.amber),
                 ],
               ),
 
               const SizedBox(height: 20),
 
-              // 🔹 Menu Hari Ini
-              const Text(
-                "Menu Hari Ini",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+              // 🔹 Rekomendasi Makanan (simple rectangle)
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.green, width: 1),
                 ),
-              ),
-              const SizedBox(height: 12),
-
-              MealCard(
-                title: "Sarapan",
-                percent: 75,
-                time: "08.00 WIB",
-                food: "Nasi Goreng",
-                tags: const ["Nasi", "Telur"],
-                image: "assets/images/food.jpg",
-              ),
-
-              const SizedBox(height: 20),
-
-              // 🔹 Rekomendasi Makanan
-              const Text(
-                "Rekomendasi Makanan",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 12),
-
-              ListView.builder(
-                itemCount: rekomendasi.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  final item = rekomendasi[index];
-                  return GestureDetector(
-                    onTap: () {
-                      context.push('/detail', extra: item);
-                    },
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        side: const BorderSide(color: Colors.green),
-                      ),
-                      margin: const EdgeInsets.only(bottom: 12),
-                      child: ListTile(
-                        leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.asset(
-                            item['gambar'],
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        title: Text(item['nama']),
-                        subtitle: Text(item['persen']),
-                        trailing: const Icon(Icons.arrow_forward_ios_rounded,
-                            size: 18, color: Colors.green),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Rekomendasi Makanan",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  );
-                },
+                    const SizedBox(height: 12),
+
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: rekomendasi.length,
+                      itemBuilder: (context, index) {
+                        final item = rekomendasi[index];
+                        return GestureDetector(
+                          onTap: () {
+                            context.push('/detail', extra: item);
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(bottom: 12),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.green, width: 1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 28,
+                                  backgroundImage: AssetImage(item['gambar']),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        item['nama'],
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      Text(
+                                        item['persen'],
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const Icon(Icons.chevron_right,
+                                    color: Colors.green),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -238,7 +226,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-/// 🔹 Nutrient Card Widget
+// 🔹 Nutrient Card Widget
 class NutrientCard extends StatelessWidget {
   final int percent;
   final String label;
@@ -280,98 +268,6 @@ class NutrientCard extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// 🔹 Meal Card Widget
-class MealCard extends StatelessWidget {
-  final String title;
-  final int percent;
-  final String time;
-  final String food;
-  final List<String> tags;
-  final String image;
-
-  const MealCard({
-    super.key,
-    required this.title,
-    required this.percent,
-    required this.time,
-    required this.food,
-    required this.tags,
-    required this.image,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Image.asset(
-                image,
-                height: 80,
-                width: 80,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(width: 16),
-
-            // Info makanan
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Text(
-                        time,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    "$percent% $food",
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 6,
-                    children: tags
-                        .map((tag) => Chip(
-                      label: Text(tag),
-                      backgroundColor: Colors.grey[200],
-                      labelStyle: const TextStyle(fontSize: 12),
-                    ))
-                        .toList(),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
       ),
     );
   }

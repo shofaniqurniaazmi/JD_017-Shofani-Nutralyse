@@ -51,7 +51,7 @@ class _CameraState extends State<Camera> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => DetailCamera1(
+          builder: (context) => DetailCamera(
             imagePath: picture.path,
             image: picture,
           ),
@@ -73,7 +73,7 @@ class _CameraState extends State<Camera> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => DetailCamera1(
+          builder: (context) => DetailCamera(
             imagePath: pickedFile.path,
             image: pickedFile,
           ),
